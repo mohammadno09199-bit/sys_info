@@ -1,6 +1,7 @@
 import os
 import platform
 import socket
+import subprocess
 import psutil
 import cpuinfo
 from datetime import datetime
@@ -9,6 +10,48 @@ try:
     import GPUtil
 except ImportError:
     GPUtil = None
+
+
+def get_laptop_model():
+    """Extract laptop manufacturer, product name, and serial number across OS."""
+    manufacturer = "Unknown"
+    model = "Unknown"
+    serial = "Unknown"
+    os_name = platform.system().lower()
+
+    if "windows" in os_name:
+        try:
+            # Query BIOS and Computer System using PowerShell / WMIC
+            cmd_model = "powershell -Command \"(Get-CimInstance Win32_ComputerSystem).Model\""
+            cmd_vendor = "powershell -Command \"(Get-CimInstance Win32_ComputerSystem).Manufacturer\""
+            cmd_serial = "powershell -Command \"(Get-CimInstance Win32_Bios).SerialNumber\""
+
+            model = subprocess.check_output(cmd_model, shell=True, stderr=subprocess.DEVNULL).decode().strip()
+            manufacturer = subprocess.check_output(cmd_vendor, shell=True, stderr=subprocess.DEVNULL).decode().strip()
+            serial = subprocess.check_output(cmd_serial, shell=True, stderr=subprocess.DEVNULL).decode().strip()
+        except Exception:
+            pass
+
+    elif "linux" in os_name:
+        # Check standard Linux DMI sysfs entries
+        try:
+            if os.path.exists("/sys/class/dmi/id/sys_vendor"):
+                with open("/sys/class/dmi/id/sys_vendor", "r") as f:
+                    manufacturer = f.read().strip()
+            if os.path.exists("/sys/class/dmi/id/product_name"):
+                with open("/sys/class/dmi/id/product_name", "r") as f:
+                    model = f.read().strip()
+            if os.path.exists("/sys/class/dmi/id/product_serial"):
+                with open("/sys/class/dmi/id/product_serial", "r") as f:
+                    serial = f.read().strip()
+        except Exception:
+            pass
+
+    return {
+        "manufacturer": manufacturer,
+        "model": model,
+        "serial": serial
+    }
 
 
 def get_size(bytes_val, suffix="B"):
@@ -125,6 +168,13 @@ def main():
             hours, remainder = divmod(battery.secsleft, 3600)
             minutes, _ = divmod(remainder, 60)
             print(f"Remaining Time:     {int(hours)} hours and {int(minutes)} minutes")
+
+    # --- Laptop / Device Model (Placed at the end as requested) ---
+    print_header("Device & Hardware Model")
+    laptop_info = get_laptop_model()
+    print(f"Manufacturer:       {laptop_info['manufacturer']}")
+    print(f"Product Model:      {laptop_info['model']}")
+    print(f"Serial Number:      {laptop_info['serial']}")
 
     print("\n" + "=" * 60)
 
