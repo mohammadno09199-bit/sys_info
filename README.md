@@ -1,80 +1,243 @@
 ```markdown
-# Python System Information Tool 🖥️
+# 🖥️ ابزار نمایش اطلاعات سیستم و سخت‌افزار
 
-A lightweight and clean Python script to gather detailed hardware and system specifications (CPU, RAM, GPU, Storage, Network, and Battery) across different operating systems.
+یک برنامهٔ پایتون برای نمایش اطلاعات کامل سیستم‌عامل، پردازنده، رم، کارت گرافیک، حافظه‌های ذخیره‌سازی، شبکه، باتری و مدل دستگاه.
 
----
+این برنامه برای ویندوز و لینوکس طراحی شده و اطلاعات را مستقیماً از سیستم فعلی دریافت می‌کند.
 
-## Features
+## ✨ قابلیت‌ها
 
-- **System & OS Info:** Detects OS release, architecture, hostname, and system boot time.
-- **Advanced CPU Details:** Retrieves exact processor brand/model, physical cores, threads, and current/max frequencies.
-- **Memory Tracking:** Monitors total, available, and used RAM along with Swap space.
-- **GPU Diagnostics:** Detects dedicated graphics cards (NVIDIA/AMD) via `GPUtil`, tracking VRAM, temperature, and load.
-- **Storage Breakdown:** Lists all active storage partitions with total size, usage percentage, and file system types.
-- **Network Interfaces:** Scans active network interfaces with their respective IPv4 and MAC addresses.
-- **Battery Status:** Reports battery percentage, power plug status, and estimated remaining time for laptops.
+- نمایش نام و نسخهٔ سیستم‌عامل
+- نمایش معماری سیستم، نام کامپیوتر و زمان روشن‌شدن سیستم
+- نمایش مدل پردازنده
+- نمایش تعداد هسته‌های فیزیکی و رشته‌های پردازشی
+- نمایش فرکانس فعلی و حداکثر پردازنده
+- نمایش میزان مصرف لحظه‌ای CPU
+- نمایش مقدار کل، آزاد و مصرف‌شدهٔ RAM
+- نمایش اطلاعات Swap در لینوکس
+- نمایش کارت‌های گرافیک و اطلاعات GPU
+- نمایش مقدار VRAM کارت گرافیک
+- نمایش دمای GPU و میزان استفاده از آن، در صورت پشتیبانی
+- نمایش پارتیشن‌ها و درایوهای ذخیره‌سازی
+- نمایش نوع فایل‌سیستم و فضای آزاد هر درایو
+- نمایش رابط‌های شبکه
+- نمایش آدرس IP و MAC Address
+- نمایش درصد شارژ و وضعیت اتصال شارژر
+- نمایش سازنده، مدل و شماره‌سریال دستگاه
+- پشتیبانی از ویندوز و لینوکس
 
----
+## 📁 نام فایل پیشنهادی
 
-## Prerequisites
-
-Make sure you have Python 3.x installed on your system.
-
----
-
-## Installation & Setup
-
-It is recommended to run this script inside a Python Virtual Environment to avoid system-wide package restrictions (such as PEP 668 on Debian/Kali Linux).
-
-### 1. Clone or download the project files
-Open your terminal in the project directory.
-
-### 2. Create a virtual environment
-```bash
-python3 -m venv venv
+```text
+system_info.py
 ```
 
-### 3. Activate the virtual environment
-- **Linux / macOS:**
-  ```bash
-  source venv/bin/activate
-  ```
-- **Windows (CMD / PowerShell):**
-  ```cmd
-  venv\Scripts\activate
-  ```
+## ⚙️ پیش‌نیازها
 
-### 4. Install required dependencies
-```bash
-pip install psutil py-cpuinfo gputil tabulate
+برای اجرای برنامه، پایتون نسخهٔ ۳.۸ یا بالاتر را نصب کن.
+
+کتابخانه‌های موردنیاز:
+
+- `psutil`: دریافت اطلاعات سیستم، پردازنده، رم، دیسک، شبکه و باتری
+- `py-cpuinfo`: دریافت مدل و مشخصات پردازنده
+- `GPUtil`: دریافت اطلاعات کارت گرافیک‌های سازگار، مخصوصاً NVIDIA
+
+## 📦 نصب کتابخانه‌ها
+
+### ویندوز
+
+ترمینال یا PowerShell را باز کن و اجرا کن:
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install psutil py-cpuinfo GPUtil
 ```
 
----
+اگر دستور `python` کار نکرد، از این دستور استفاده کن:
 
-## Usage
-
-Run the script directly in your terminal:
-```bash
-python3 sys_info.py
+```powershell
+py -m pip install psutil py-cpuinfo GPUtil
 ```
 
-### Saving Output to a File
-If you want to print the specifications on the screen and simultaneously save them to a text file:
+### لینوکس
+
 ```bash
-python3 sys_info.py | tee system_report.txt
+sudo apt update
+sudo apt install -y python3 python3-pip
+python3 -m pip install --user psutil py-cpuinfo GPUtil
 ```
 
----
+در بعضی توزیع‌های جدید لینوکس، نصب مستقیم با `pip` ممکن است محدود شده باشد. در این حالت از محیط مجازی استفاده کن:
 
-## Deactivation
-When you are done, you can deactivate the virtual environment:
 ```bash
-deactivate
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install psutil py-cpuinfo GPUtil
 ```
 
----
+## ▶️ اجرای برنامه
 
-## License
-This project is open-source and free to use for personal and professional tasks.
+### ویندوز
+
+```powershell
+python system_info.py
+```
+
+یا:
+
+```powershell
+py system_info.py
+```
+
+### لینوکس
+
+```bash
+python3 system_info.py
+```
+
+اگر برای خواندن اطلاعات سخت‌افزاری دسترسی بیشتری لازم بود، می‌توانی برنامه را با دسترسی روت اجرا کنی:
+
+```bash
+sudo python3 system_info.py
+```
+
+در حالت عادی اجرای برنامه بدون `sudo` کافی است.
+
+## 🪟 اطلاعات مخصوص ویندوز
+
+در ویندوز، اطلاعات سازنده، مدل و شماره‌سریال دستگاه از طریق PowerShell و دستورهای CIM دریافت می‌شود:
+
+- سازندهٔ دستگاه
+- مدل لپ‌تاپ یا کامپیوتر
+- شماره‌سریال BIOS
+
+ممکن است در بعضی نسخه‌های ویندوز یا سیستم‌های مجازی، مقدار برخی فیلدها `Unknown` نمایش داده شود.
+
+## 🐧 اطلاعات مخصوص لینوکس
+
+در لینوکس، اطلاعات مدل دستگاه از مسیرهای استاندارد DMI خوانده می‌شود:
+
+```text
+/sys/class/dmi/id/sys_vendor
+/sys/class/dmi/id/product_name
+/sys/class/dmi/id/product_serial
+```
+
+در بعضی لپ‌تاپ‌ها یا ماشین‌های مجازی، ممکن است این فایل‌ها وجود نداشته باشند یا دسترسی به آن‌ها محدود باشد.
+
+## 🎮 نکته دربارهٔ کارت گرافیک
+
+کتابخانهٔ `GPUtil` بیشتر برای شناسایی کارت‌های گرافیک NVIDIA مناسب است.
+
+اگر `GPUtil` نصب نباشد یا کارت گرافیک شناسایی نشود، برنامه متوقف نمی‌شود و پیام مناسبی نمایش می‌دهد.
+
+در سیستم‌هایی که فقط گرافیک مجتمع Intel یا AMD دارند، ممکن است اطلاعات GPU کامل نمایش داده نشود.
+
+## 📊 نمونهٔ بخش‌های خروجی
+
+```text
+============================================================
+                    System Information
+============================================================
+OS:                 Windows 11
+OS Version:         10.0.26100
+Architecture:       AMD64
+Hostname:           LAPTOP-EXAMPLE
+Boot Time:          2026-01-20 09:15:30
+
+============================================================
+                     CPU Information
+============================================================
+Processor Model:    12th Gen Intel(R) Core(TM) i5-1235U
+Physical Cores:     10
+Total Threads:      12
+Total CPU Usage:    8.4%
+```
+
+## 🔐 نکات حریم خصوصی
+
+این برنامه اطلاعات را فقط در ترمینال نمایش می‌دهد و به‌صورت پیش‌فرض چیزی را به اینترنت ارسال نمی‌کند.
+
+بااین‌حال، خروجی برنامه ممکن است شامل اطلاعات حساس زیر باشد:
+
+- شماره‌سریال دستگاه
+- نام کامپیوتر
+- آدرس MAC کارت شبکه
+- آدرس IP داخلی
+- مدل دقیق سخت‌افزار
+
+قبل از انتشار اسکرین‌شات یا خروجی برنامه در اینترنت، این اطلاعات را حذف یا مخفی کن.
+
+## 🛠️ خطاهای رایج
+
+### خطای نصب نبودن `psutil`
+
+```text
+ModuleNotFoundError: No module named 'psutil'
+```
+
+راه‌حل:
+
+```bash
+python -m pip install psutil
+```
+
+### خطای نصب نبودن `cpuinfo`
+
+نام پکیج نصب‌شونده `py-cpuinfo` است، اما در کد با نام `cpuinfo` استفاده می‌شود:
+
+```bash
+python -m pip install py-cpuinfo
+```
+
+### پیام نصب نبودن GPUtil
+
+اگر این پیام نمایش داده شد:
+
+```text
+GPUtil module not available.
+```
+
+این دستور را اجرا کن:
+
+```bash
+python -m pip install GPUtil
+```
+
+اگر کارت گرافیک سازگار وجود نداشته باشد، ممکن است همچنان پیام نبودن GPU نمایش داده شود. این موضوع خطای برنامه نیست.
+
+### نمایش `Unknown` برای مدل یا شماره‌سریال
+
+این حالت معمولاً به یکی از دلایل زیر رخ می‌دهد:
+
+- دسترسی کافی برای خواندن اطلاعات سخت‌افزار وجود ندارد.
+- سیستم داخل ماشین مجازی اجرا شده است.
+- سازندهٔ دستگاه اطلاعات DMI یا BIOS را ثبت نکرده است.
+- دستور PowerShell یا مسیر DMI روی سیستم در دسترس نیست.
+
+## 💻 سازگاری
+
+| سیستم‌عامل | وضعیت |
+|---|---|
+| Windows 10 | پشتیبانی می‌شود |
+| Windows 11 | پشتیبانی می‌شود |
+| Ubuntu | پشتیبانی می‌شود |
+| Debian | پشتیبانی می‌شود |
+| Linux Mint | پشتیبانی می‌شود |
+| Parrot OS | پشتیبانی می‌شود |
+| Kali Linux | معمولاً پشتیبانی می‌شود |
+| ماشین مجازی | اطلاعات سخت‌افزاری ممکن است ناقص باشد |
+
+## ⚠️ محدودیت‌ها
+
+- اطلاعات GPU به پشتیبانی درایور و کتابخانهٔ `GPUtil` وابسته است.
+- اطلاعات دمای پردازنده در نسخهٔ فعلی نمایش داده نمی‌شود.
+- درایوهای بدون دسترسی ممکن است نادیده گرفته شوند.
+- مقدار زمان باقی‌ماندهٔ باتری در همهٔ سیستم‌ها قابل دریافت نیست.
+- در لینوکس، برخی اطلاعات سخت‌افزاری ممکن است به دسترسی روت نیاز داشته باشد.
+- این برنامه ابزار تست سلامت سخت‌افزار نیست و فقط اطلاعات فعلی سیستم را نمایش می‌دهد.
+
+## Mohammad Noori نویسنده
+
+ساخته‌شده برای بررسی سریع مشخصات سیستم و سخت‌افزار با پایتون.
 ```
